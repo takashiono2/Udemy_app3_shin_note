@@ -1,6 +1,6 @@
 import "./Sidebar.css";
 
-const Sidebar = ({notes, onAddNote, onDeleteNote}) => {
+const Sidebar = ({notes, onAddNote, onDeleteNote, activeNote, setActiveNote}) => {
   return(
     <div className="app-sidebar">
       <div className="app-sidebar-header">
@@ -10,7 +10,10 @@ const Sidebar = ({notes, onAddNote, onDeleteNote}) => {
       <div className="app-sidebar-notes">
         { notes.map((note) =>(
           // クリツクされたactiveクラスが表示されるようにsetActiveNoteとする。
-          <div className="app-sidebar-note" key={note.id}>
+          <div className={`app-sidebar-note ${ note.id === activeNote && "active"}`}
+            key={note.id}
+            onClick={()=>setActiveNote(note.id)}
+          >
             <div className="sidebar-note-title">
               <strong>{note.title}</strong>
               <button onClick={()=>onDeleteNote(note.id)}>削除</button>

@@ -6,6 +6,8 @@ import uuid from 'react-uuid'
 
 function App() {
   const [notes, setNotes] = useState([]);
+  const [activeNote, setActiveNote] = useState(false);
+
   const onAddNote = () => {
     const newNotes = {
       id: uuid(),
@@ -21,10 +23,21 @@ function App() {
     setNotes(filterNotes);
   }
 
+  const getActiveNote = () =>{
+    return notes.find((note)=> note.id === activeNote );
+  }
+
+
   return(
     <div className="App">
-      <Sidebar onAddNote={onAddNote} notes={notes} onDeleteNote={onDeleteNote}/>
-      <Main />
+      <Sidebar
+        onAddNote={onAddNote}
+        notes={notes}
+        onDeleteNote={onDeleteNote}
+        activeNote={activeNote}
+        setActiveNote={setActiveNote}
+      />
+      <Main activeNote={getActiveNote()}/>
     </div>
   )
 }
