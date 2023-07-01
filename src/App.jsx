@@ -1,21 +1,31 @@
 import './App.css'
 import Main from './components/Main';
 import Sidebar from './components/Sidebar';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import uuid from 'react-uuid'
 
 function App() {
-  const [notes, setNotes] = useState([]);
+  //キーをnotesとして、localStorageから初期値をとってくる。もしくはなければ、[]とする
+  const [notes, setNotes] = useState(JSON.parse(localStorage.getItem("notes")) || []);
   const [activeNote, setActiveNote] = useState(false);
 
+  //notesが更新される時、loacalStorageに保存する、キーはnotesとする。
+  useEffect(()=>{
+    localStorage.setItem("notes", JSON.stringify(notes));
+  },[notes]);
+
+  useEffect(()=>{
+    if (notes.length !== 0) setActiveNote(notes[0].id);
+  },[]);
+
   const onAddNote = () => {
-    const newNotes = {
+    const newNote = {
       id: uuid(),
       title: "新しいノート",
-      content: "新しい内容",
+      content: "",
       modDate: Date.now()
     }
-    setNotes([...notes, newNotes]);
+    setNotes([...notes, newNote]);
   }
 
   const onDeleteNote = (id) =>{
@@ -25,6 +35,17 @@ function App() {
 
   const getActiveNote = () =>{
     return notes.find((note)=> note.id === activeNote );
+  }
+
+  const onUpdateNote = (updatedNote) => {
+    const updateNotesArray = notes.map((note)=>{
+      if(note.id === updatedNote.id){
+        return updatedNote;
+      }else{
+        return note;
+      }
+    });
+    setNotes(updateNotesArray);
   }
 
 
@@ -37,7 +58,10 @@ function App() {
         activeNote={activeNote}
         setActiveNote={setActiveNote}
       />
-      <Main activeNote={getActiveNote()}/>
+      <Main
+        activeNote={getActiveNote()}
+        onUpdateNote={onUpdateNote}
+      />
     </div>
   )
 }

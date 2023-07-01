@@ -1,6 +1,15 @@
 import "./Main.css";
+import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 
-function Main({ activeNote }) {
+function Main({ activeNote, onUpdateNote}) {
+  const onEditNote = (key, value) => {
+    onUpdateNote({
+      ...activeNote,
+      [key]: value,
+      modDate: Date.now(),
+    })
+  }
+
   if(!activeNote){
     return (<div className="no-active-note">ノートが選択されていません</div>)
   }
@@ -8,14 +17,25 @@ function Main({ activeNote }) {
   return (
     <div className="app-main">
       <div className="app-main-note-edit">
-        {/* valueの値はtitleとする idはtitleとするonChangeはonEditNote関数*/}
-        <input type="text" />
-        {/* valueの値はcontentとする ,onChangeを使う,onEditNote関数*/}
-        <textarea id="" placeholder="ノートの内容を記入"></textarea>
+        <input
+          id="title"
+          type="text"
+          value={activeNote.title}
+          onChange={(e)=>onEditNote("title",e.target.value)}
+        />
+        <textarea
+          id="content"
+          placeholder="ノートの内容を記入"
+          value={activeNote.content}
+          onChange={(e)=>onEditNote("content",e.target.value)}
+        >
+        </textarea>
       </div>
       <div className="app-main-note-preview">
         <h1 className="preview-title">{activeNote.title}</h1>
-        <div className="markdown-preview">{activeNote.content}</div>
+        <ReactMarkdown className="markdown-preview">
+          {activeNote.content}
+        </ReactMarkdown>
       </div>
     </div>
   );

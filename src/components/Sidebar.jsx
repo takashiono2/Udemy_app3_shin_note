@@ -1,6 +1,9 @@
 import "./Sidebar.css";
 
 const Sidebar = ({notes, onAddNote, onDeleteNote, activeNote, setActiveNote}) => {
+
+  //const sortedNotes とし、modDateを使いソート順にする。降順（新しい順）
+
   return(
     <div className="app-sidebar">
       <div className="app-sidebar-header">
